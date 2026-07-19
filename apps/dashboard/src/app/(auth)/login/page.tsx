@@ -26,8 +26,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg p-4 sm:p-6">
       <div className="w-full max-w-md">
+        {/* Branding */}
         <div className="text-center mb-8">
-          <div className="inline-block p-2 bg-surface rounded-card shadow-soft">
+          <div className="inline-block p-2 glass rounded-card shadow-soft">
             <Image
               src="/logo.svg"
               alt="Reshma Dashboard"
@@ -37,17 +38,24 @@ export default function LoginPage() {
               priority
             />
           </div>
-          <h1 className="mt-6 text-2xl font-serif text-primary">Welcome Back</h1>
-          <p className="text-text-secondary text-sm mt-1">Sign in to manage your boutique</p>
+          <h1 className="mt-6 text-2xl font-serif text-primary dark:text-primary/90">
+            Welcome Back
+          </h1>
+          <p className="text-text-secondary dark:text-text-secondary/80 text-sm mt-1">
+            Sign in to manage your boutique
+          </p>
         </div>
-        <div className="bg-surface rounded-card shadow-soft p-6 sm:p-8 border border-border">
-          <LoginForm
-            onSubmit={handleSubmit}
-            loading={isLoading}
-            error={error}
-          />
-        </div>
-        <p className="text-center text-xs text-text-secondary mt-6">
+
+        {/* Login Form – glassy container */}
+        <LoginForm
+          onSubmit={handleSubmit}
+          loading={isLoading}
+          error={error}
+          glass
+          variant="glass"
+        />
+
+        <p className="text-center text-xs text-text-secondary dark:text-text-secondary/60 mt-6">
           &copy; {new Date().getFullYear()} Reshma Boutique. All rights reserved.
         </p>
       </div>

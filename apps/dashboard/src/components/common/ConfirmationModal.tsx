@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+
 import { Modal, Button } from '@repo/ui';
 import { AlertTriangle } from 'lucide-react';
 
@@ -15,7 +15,7 @@ interface ConfirmationModalProps {
   loading?: boolean;
 }
 
-export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+export const ConfirmationModal = ({
   isOpen,
   onClose,
   onConfirm,
@@ -25,19 +25,17 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   cancelText = 'Cancel',
   variant = 'danger',
   loading = false,
-}) => {
-  // Icon wrapper colors (visual only)
+}: ConfirmationModalProps) => {
   const variantColors = {
     danger: 'text-error border-error/30 bg-error/10',
     warning: 'text-warning border-warning/30 bg-warning/10',
     info: 'text-secondary border-secondary/30 bg-secondary/10',
   };
 
-  // Map to valid Button variants
   const variantButtons = {
-    danger: 'secondary',   // Red (coral)
-    warning: 'grayGlass',  // Neutral glass
-    info: 'primary',       // Sky blue
+    danger: 'secondary',
+    warning: 'grayGlass',
+    info: 'primary',
   } as const;
 
   return (

@@ -1,13 +1,21 @@
-'use client'
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { cn } from '../../utils/cn';
 
 export interface AvatarProps {
+  /** Image URL */
   src?: string | null;
+  /** Name for initials fallback */
   name?: string;
+  /** Size variant */
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  /** Additional CSS classes */
   className?: string;
-  /** Optional: use glass effect for fallback avatar (default: true) */
+  /** Use glass effect for fallback avatar (default: true) */
   glass?: boolean;
+  /** Optional custom fallback icon/component */
+  fallback?: React.ReactNode;
 }
 
 const sizeMap = {
@@ -17,46 +25,58 @@ const sizeMap = {
   xl: 'w-20 h-20 text-2xl',
 };
 
+const borderClasses = 'border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]';
+
 export const Avatar: React.FC<AvatarProps> = ({
   src,
   name,
   size = 'md',
   className = '',
   glass = true,
+  fallback,
 }) => {
+  const [imgError, setImgError] = useState(false);
+
   const initials = name
-    ? name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    ? name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
     : '';
 
-  // If there's a valid image source, render the image
-  if (src) {
+  const sizeClass = sizeMap[size] || sizeMap.md;
+
+  // ─── Image with fallback on error ─────────────────────────────
+
+  if (src && !imgError) {
     return (
       <img
         src={src}
         alt={name || 'Avatar'}
-        className={`
-          rounded-full object-cover 
-          border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]
-          ${sizeMap[size]} ${className}
-        `}
+        onError={() => setImgError(true)}
+        className={cn(
+          'rounded-full object-cover',
+          borderClasses,
+          sizeClass,
+          className,
+        )}
       />
     );
   }
 
-  // Fallback: initials or "?" with glass effect
-  const fallbackClasses = `
-    rounded-full flex items-center justify-center font-medium
-    border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]
-    ${glass 
-      ? 'bg-[rgba(246,246,246,0.6)] dark:bg-[rgba(30,30,30,0.5)] backdrop-blur-[10px] saturate-[140%] dark:backdrop-blur-[20px] text-text-primary' 
-      : 'bg-secondary/20 text-secondary'
-    }
-    ${sizeMap[size]} ${className}
-  `;
+  // ─── Fallback (initials or custom) ───────────────────────────
 
-  return (
-    <div className={fallbackClasses}>
-      {initials || '?'}
-    </div>
+  const fallbackClasses = cn(
+    'rounded-full flex items-center justify-center font-medium',
+    borderClasses,
+    sizeClass,
+    glass
+      ? 'bg-[rgba(246,246,246,0.6)] dark:bg-[rgba(30,30,30,0.5)] backdrop-blur-[10px] saturate-[140%] dark:backdrop-blur-[20px] text-text-primary'
+      : 'bg-secondary/20 text-secondary',
+    className,
   );
+
+  return <div className={fallbackClasses}>{fallback || initials || '?'}</div>;
 };

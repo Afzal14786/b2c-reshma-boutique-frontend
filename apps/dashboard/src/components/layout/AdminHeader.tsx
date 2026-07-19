@@ -2,7 +2,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Bell, ChevronDown, LogOut, Settings, User } from 'lucide-react';
-import { Avatar, Search, Dropdown } from '@repo/ui';
+import {
+  Avatar,
+  Search,
+  Dropdown,
+  DropdownTrigger,
+  DropdownContent,
+  DropdownItem,
+  DropdownSeparator,
+} from '@repo/ui';
 import { useMediaQuery } from '@shared/hooks';
 import { MobileNav } from './MobileNav';
 import Link from 'next/link';
@@ -12,16 +20,11 @@ export const AdminHeader = () => {
   const { user, logout } = useAuth();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  const profileRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
-        setShowProfileMenu(false);
-      }
       if (notificationRef.current && !notificationRef.current.contains(e.target as Node)) {
         setShowNotifications(false);
       }
@@ -69,51 +72,35 @@ export const AdminHeader = () => {
           )}
         </div>
 
-        {/* Profile Dropdown */}
-        <div ref={profileRef} className="relative">
-          <button
-            onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-2 p-1 rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
-          >
-            <Avatar
-              src={user?.avatar}
-              name={`${user?.firstname} ${user?.lastname}`}
-              size="sm"
-              className="border-2 border-glass-border"
-            />
-            <span className="text-sm font-medium text-text-primary hidden sm:block">
-              {user?.firstname}
-            </span>
-            <ChevronDown size={14} className="text-text-secondary hidden sm:block" />
-          </button>
-
-          {showProfileMenu && (
-            <div className="absolute right-0 mt-2 w-48 glass rounded-card shadow-glass py-2 z-50">
-              <Link
-                href="/dashboard/profile"
-                className="flex items-center gap-3 px-4 py-2 text-sm text-text-primary hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
-              >
-                <User size={16} />
-                Profile
-              </Link>
-              <Link
-                href="/dashboard/settings"
-                className="flex items-center gap-3 px-4 py-2 text-sm text-text-primary hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
-              >
-                <Settings size={16} />
-                Settings
-              </Link>
-              <hr className="border-glass-border my-1" />
-              <button
-                onClick={logout}
-                className="flex items-center gap-3 px-4 py-2 text-sm text-error hover:bg-error/10 transition-colors w-full text-left"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Profile Dropdown – using @repo/ui Dropdown */}
+        <Dropdown placement="bottom">
+          <DropdownTrigger>
+            <button className="flex items-center gap-2 p-1 rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-colors">
+              <Avatar
+                src={user?.avatar}
+                name={`${user?.firstname} ${user?.lastname}`}
+                size="sm"
+                className="border-2 border-glass-border"
+              />
+              <span className="text-sm font-medium text-text-primary hidden sm:block">
+                {user?.firstname}
+              </span>
+              <ChevronDown size={14} className="text-text-secondary hidden sm:block" />
+            </button>
+          </DropdownTrigger>
+          <DropdownContent align="end">
+            <DropdownItem icon={<User size={16} />} asChild>
+              <Link href="/dashboard/profile">Profile</Link>
+            </DropdownItem>
+            <DropdownItem icon={<Settings size={16} />} asChild>
+              <Link href="/dashboard/settings">Settings</Link>
+            </DropdownItem>
+            <DropdownSeparator />
+            <DropdownItem icon={<LogOut size={16} />} danger onClick={logout}>
+              Logout
+            </DropdownItem>
+          </DropdownContent>
+        </Dropdown>
       </div>
     </header>
   );

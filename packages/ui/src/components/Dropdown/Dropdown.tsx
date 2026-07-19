@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useRef, useCallback, useMemo } from 'react';
 import { cn } from '../../utils/cn';
-import type { DropdownContextValue, DropdownProps, DropdownPlacement } from './Dropdown.types';
+import type { DropdownContextValue, DropdownProps } from './Dropdown.types';
 
 const DropdownContext = createContext<DropdownContextValue | null>(null);
 

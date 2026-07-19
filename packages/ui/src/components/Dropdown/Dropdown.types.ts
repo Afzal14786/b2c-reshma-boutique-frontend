@@ -1,4 +1,4 @@
-import type { ReactNode, ReactElement } from 'react';
+import type { ReactNode } from 'react';
 
 export type DropdownPlacement = 'bottom' | 'top' | 'left' | 'right';
 
@@ -51,6 +51,7 @@ export interface DropdownItemProps {
   onClick?: () => void;
   /** Additional CSS classes */
   className?: string;
+  asChild?: boolean;
 }
 
 export interface DropdownSeparatorProps {

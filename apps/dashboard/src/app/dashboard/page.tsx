@@ -1,5 +1,7 @@
 'use client';
+
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { dashboardApi, type DashboardMetrics } from '@repo/shared';
 import { Skeleton } from '@repo/ui';
 import {
@@ -10,6 +12,8 @@ import {
   InventoryAlerts,
   PendingTickets,
 } from '@/components/dashboard';
+
+// ─── Fallback data ─────────────────────────────────────────────────
 
 const fallbackMetrics: DashboardMetrics = {
   dateRange: { start: '', end: '' },
@@ -29,15 +33,23 @@ const fallbackMetrics: DashboardMetrics = {
   pendingSupportTickets: 0,
 };
 
+// ─── Component ─────────────────────────────────────────────────────
+
 export default function DashboardPage() {
+  const router = useRouter();
+
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
   });
+
+  // ─── Fetch metrics ──────────────────────────────────────────────
 
   useEffect(() => {
     const fetchMetrics = async () => {
@@ -50,8 +62,8 @@ export default function DashboardPage() {
         });
         setMetrics(res.data);
       } catch (err: any) {
-        console.error(err);
-        setError('Failed to load dashboard data');
+        console.error('Dashboard fetch error:', err);
+        setError(err?.response?.data?.message || 'Failed to load dashboard data');
         setMetrics(fallbackMetrics);
       } finally {
         setLoading(false);
@@ -60,10 +72,11 @@ export default function DashboardPage() {
     fetchMetrics();
   }, [dateRange]);
 
+  // ─── Loading state ──────────────────────────────────────────────
+
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-10 w-48 bg-[rgba(246,246,246,0.4)] dark:bg-[rgba(30,30,30,0.3)] rounded animate-pulse" />
         <Skeleton variant="card" className="h-16" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
@@ -79,10 +92,20 @@ export default function DashboardPage() {
   }
 
   const currentMetrics = metrics || fallbackMetrics;
-  const { financials, userMetrics, orderFulfillment, topSellingProducts, inventoryAlerts, pendingSupportTickets } = currentMetrics;
+  const {
+    financials,
+    userMetrics,
+    orderFulfillment,
+    topSellingProducts,
+    inventoryAlerts,
+    pendingSupportTickets,
+  } = currentMetrics;
+
+  // ─── Render ──────────────────────────────────────────────────────
 
   return (
     <div className="space-y-6">
+      {/* Page header – glassy title */}
       <div className="mb-6">
         <h1 className="text-3xl sm:text-4xl font-serif font-semibold italic text-primary dark:text-primary/90 tracking-wide">
           Dashboard
@@ -92,8 +115,9 @@ export default function DashboardPage() {
         </p>
       </div>
 
+      {/* Error banner */}
       {error && (
-        <div className="p-4 bg-[rgba(246,246,246,0.6)] dark:bg-[rgba(30,30,30,0.55)] backdrop-blur-[20px] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-card text-text-primary dark:text-text-primary/90 text-sm flex items-center justify-between flex-wrap gap-2 shadow-glass">
+        <div className="p-4 glass rounded-card text-text-primary text-sm flex items-center justify-between flex-wrap gap-2 shadow-glass">
           <span>{error}</span>
           <button
             onClick={() => window.location.reload()}
@@ -104,23 +128,34 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* Date range picker */}
       <DateRangePicker
         startDate={dateRange.startDate}
         endDate={dateRange.endDate}
-        onStartDateChange={(val) => setDateRange((prev) => ({ ...prev, startDate: val }))}
-        onEndDateChange={(val) => setDateRange((prev) => ({ ...prev, endDate: val }))}
+        onStartDateChange={(val) =>
+          setDateRange((prev) => ({ ...prev, startDate: val }))
+        }
+        onEndDateChange={(val) =>
+          setDateRange((prev) => ({ ...prev, endDate: val }))
+        }
       />
 
+      {/* Metrics grid */}
       <MetricsGrid financials={financials} userMetrics={userMetrics} />
 
+      {/* Charts & tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <OrderFulfillmentChart data={orderFulfillment} />
         <TopSellingProducts products={topSellingProducts} />
       </div>
 
+      {/* Alerts & support */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <InventoryAlerts alerts={inventoryAlerts} />
-        <PendingTickets count={pendingSupportTickets} />
+        <PendingTickets
+          count={pendingSupportTickets}
+          onViewTickets={() => router.push('/dashboard/support')}
+        />
       </div>
     </div>
   );
