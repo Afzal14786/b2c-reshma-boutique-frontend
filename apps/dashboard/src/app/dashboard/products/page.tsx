@@ -1,6 +1,7 @@
 'use client';
+
 import { ProductList } from '@/components/products/ProductList';
 
-export default function ProductsListPage() {
+export default function ProductsPage() {
   return <ProductList />;
 }

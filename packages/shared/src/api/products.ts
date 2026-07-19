@@ -1,8 +1,7 @@
 import { apiClient } from './client';
-import { Product, CreateProductRequest, UpdateProductRequest } from '../types';
+import { Product } from '../types';
 
 export const productsApi = {
-  // Public
   getProducts: (params?: {
     page?: number;
     limit?: number;
@@ -12,17 +11,22 @@ export const productsApi = {
     sort?: string;
     q?: string;
   }) =>
-    apiClient.get<{ products: Product[]; total: number; page: number; limit: number }>('/products', { params }),
+    apiClient.get<{ products: Product[]; total: number; page: number; limit: number }>(
+      '/products',
+      { params },
+    ),
 
-  getProductById: (id: string) =>
-    apiClient.get<Product>(`/products/${id}`),
+  getProductById: (id: string) => apiClient.get<Product>(`/products/${id}`),
+  // admin 
+  createProduct: (data: FormData) =>
+    apiClient.post<Product>('/products', data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 
-  // Admin
-  createProduct: (data: CreateProductRequest) =>
-    apiClient.post<Product>('/products', data),
-
-  updateProduct: (id: string, data: UpdateProductRequest) =>
-    apiClient.patch<Product>(`/products/${id}`, data),
+  updateProduct: (id: string, data: FormData) =>
+    apiClient.patch<Product>(`/products/${id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 
   deleteProduct: (id: string) =>
     apiClient.delete<{ message: string }>(`/products/${id}`),

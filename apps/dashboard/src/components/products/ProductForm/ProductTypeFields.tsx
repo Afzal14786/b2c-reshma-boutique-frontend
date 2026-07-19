@@ -1,10 +1,19 @@
-import React from 'react';
+'use client';
+
 import { useFormContext } from 'react-hook-form';
 import { Input, Card } from '@repo/ui';
 import { productTypeConfig } from './productTypeConfig';
 
-export const ProductTypeFields: React.FC<{ itemType: string }> = ({ itemType }) => {
-  const { register, formState: { errors } } = useFormContext();
+interface ProductTypeFieldsProps {
+  itemType: string;
+}
+
+export const ProductTypeFields = ({ itemType }: ProductTypeFieldsProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+
   const fields = productTypeConfig[itemType] || [];
 
   if (fields.length === 0) return null;
@@ -15,7 +24,7 @@ export const ProductTypeFields: React.FC<{ itemType: string }> = ({ itemType }) 
         {itemType} Details
       </h2>
       <div className="space-y-4">
-        {fields.map(field => {
+        {fields.map((field) => {
           switch (field.type) {
             case 'multiCheckbox':
               return (
@@ -24,7 +33,7 @@ export const ProductTypeFields: React.FC<{ itemType: string }> = ({ itemType }) 
                     {field.label}
                   </label>
                   <div className="flex flex-wrap gap-3">
-                    {field.options?.map(opt => (
+                    {field.options?.map((opt) => (
                       <label key={opt} className="flex items-center gap-1.5 text-sm cursor-pointer">
                         <input
                           type="checkbox"
@@ -37,10 +46,13 @@ export const ProductTypeFields: React.FC<{ itemType: string }> = ({ itemType }) 
                     ))}
                   </div>
                   {errors[field.key] && (
-                    <p className="text-error text-sm mt-1">{errors[field.key]?.message as string}</p>
+                    <p className="text-error text-sm mt-1">
+                      {errors[field.key]?.message as string}
+                    </p>
                   )}
                 </div>
               );
+
             case 'checkbox':
               return (
                 <div key={field.key} className="flex items-center gap-2">
@@ -55,6 +67,7 @@ export const ProductTypeFields: React.FC<{ itemType: string }> = ({ itemType }) 
                   </label>
                 </div>
               );
+
             default:
               return (
                 <Input
@@ -65,7 +78,7 @@ export const ProductTypeFields: React.FC<{ itemType: string }> = ({ itemType }) 
                   {...register(field.key, field.type === 'number' ? { valueAsNumber: true } : {})}
                   errorMessage={errors[field.key]?.message as string}
                   helperText={field.helpText}
-                  className="glass"
+                  variant="glass"
                 />
               );
           }

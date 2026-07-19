@@ -1,8 +1,9 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { productsApi, type Product } from '@repo/shared';
-import { ProductForm } from '@/components/products/ProductForm/ProductForm';
+import { ProductForm } from '@/components/products/ProductForm';
 import { Spinner } from '@repo/ui';
 
 export default function EditProductPage() {
@@ -31,7 +32,7 @@ export default function EditProductPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Spinner size="lg" glass />
+        <Spinner size="lg" variant="glass" />
       </div>
     );
   }
@@ -40,7 +41,6 @@ export default function EditProductPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Glassy header */}
       <div>
         <h1 className="text-3xl sm:text-4xl font-serif font-semibold italic text-primary dark:text-primary/90 tracking-wide">
           Edit Product

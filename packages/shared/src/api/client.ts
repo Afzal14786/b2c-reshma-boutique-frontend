@@ -17,6 +17,12 @@ export const createApiClient = (): AxiosInstance => {
   // Request interceptor
   client.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
+      // If the data is FormData, remove the Content-Type header
+      // so the browser can set it with the correct boundary.
+      if (config.data instanceof FormData) {
+        delete config.headers['Content-Type'];
+      }
+
       if (typeof window !== 'undefined') {
         const token = localStorage.getItem('accessToken');
         if (token) {

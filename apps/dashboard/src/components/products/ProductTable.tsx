@@ -1,8 +1,9 @@
 'use client';
+
 import Link from 'next/link';
 import { DataTable, StatusBadge, Button } from '@repo/ui';
 import { productsApi, type Product } from '@repo/shared';
-import { Edit, Trash2, Package } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 
 interface ProductTableProps {
   products: Product[];
@@ -10,13 +11,15 @@ interface ProductTableProps {
   onProductUpdated: () => void;
 }
 
-export const ProductTable: React.FC<ProductTableProps> = ({
+export const ProductTable = ({
   products,
   loading,
   onProductUpdated,
-}) => {
+}: ProductTableProps) => {
+  // ─── Delete handler ────────────────────────────────────────────
+
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
       await productsApi.deleteProduct(id);
       onProductUpdated();
@@ -25,6 +28,8 @@ export const ProductTable: React.FC<ProductTableProps> = ({
       alert('Failed to delete product. Please try again.');
     }
   };
+
+  // ─── Columns ──────────────────────────────────────────────────
 
   const columns = [
     {
@@ -44,8 +49,12 @@ export const ProductTable: React.FC<ProductTableProps> = ({
             </div>
           )}
           <div>
-            <p className="font-medium text-text-primary dark:text-text-primary/90">{item.name}</p>
-            <p className="text-xs text-text-secondary dark:text-text-secondary/70">{item.sku}</p>
+            <p className="font-medium text-text-primary dark:text-text-primary/90">
+              {item.name}
+            </p>
+            <p className="text-xs text-text-secondary dark:text-text-secondary/70">
+              {item.sku}
+            </p>
           </div>
         </div>
       ),
@@ -98,18 +107,6 @@ export const ProductTable: React.FC<ProductTableProps> = ({
       ),
     },
   ];
-
-  if (!loading && products.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 bg-[rgba(246,246,246,0.4)] dark:bg-[rgba(30,30,30,0.3)] backdrop-blur-sm border border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] rounded-card shadow-soft">
-        <Package size={48} className="text-text-secondary/40 dark:text-text-secondary/30 mb-4" />
-        <h3 className="text-lg font-serif font-medium text-primary dark:text-primary/90">No products found</h3>
-        <p className="text-sm text-text-secondary dark:text-text-secondary/70 mt-1">
-          Try adjusting your search or filters, or add a new product.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <DataTable

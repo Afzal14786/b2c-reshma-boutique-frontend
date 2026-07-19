@@ -1,19 +1,57 @@
-"use client";
-import { useEffect, useState } from "react";
-import { productsApi, type Product } from "@repo/shared";
-import { Button, Search, Pagination, Input } from "@repo/ui";
-import { ProductTable } from "./ProductTable";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { productsApi, type Product } from '@repo/shared';
+import { Button, Pagination } from '@repo/ui';
+import { ProductTable } from './ProductTable';
+import { SearchBar, FilterBar } from '@/components/common';
+import { Plus } from 'lucide-react';
+
+// ─── Filter configuration ───────────────────────────────────────
+
+const filterConfigs = [
+  {
+    key: 'itemType',
+    label: 'Type',
+    options: [
+      { value: '', label: 'All Types' },
+      { value: 'BANGLE', label: 'Bangle' },
+      { value: 'APPAREL', label: 'Apparel' },
+      { value: 'FABRIC', label: 'Fabric' },
+      { value: 'INNERWEAR', label: 'Innerwear' },
+      { value: 'ACCESSORY', label: 'Accessory' },
+    ],
+  },
+  {
+    key: 'mainCategory',
+    label: 'Category',
+    options: [
+      { value: '', label: 'All Categories' },
+      { value: 'Sarees', label: 'Sarees' },
+      { value: 'Apparel', label: 'Apparel' },
+      { value: 'Accessories', label: 'Accessories' },
+      { value: 'Innerwear', label: 'Innerwear' },
+      { value: 'Bangles', label: 'Bangles' },
+    ],
+  },
+];
+
+// ─── Component ──────────────────────────────────────────────────
 
 export const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState({ itemType: "", mainCategory: "" });
+  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState<Record<string, string>>({
+    itemType: '',
+    mainCategory: '',
+  });
   const pageSize = 10;
+
+  // ─── Fetch products ──────────────────────────────────────────
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -28,7 +66,9 @@ export const ProductList = () => {
       setProducts(res.data.products);
       setTotal(res.data.total);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to fetch products:', error);
+      setProducts([]);
+      setTotal(0);
     } finally {
       setLoading(false);
     }
@@ -38,9 +78,30 @@ export const ProductList = () => {
     fetchProducts();
   }, [page, search, filters]);
 
+  // ─── Handlers ─────────────────────────────────────────────────
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1); // Reset to first page when filters change
+  };
+
+  const handleClearFilters = () => {
+    setFilters({ itemType: '', mainCategory: '' });
+    setPage(1);
+    setSearch('');
+  };
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
+
+  // ─── Render ──────────────────────────────────────────────────
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-6">
+      {/* Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-serif font-semibold italic text-primary dark:text-primary/90">
             Products
@@ -50,87 +111,44 @@ export const ProductList = () => {
           </p>
         </div>
         <Link href="/dashboard/products/new">
-          <Link href="/dashboard/products/new">
-            <button
-              className="
-    inline-flex items-center justify-center gap-2
-    px-6 py-2.5
-    rounded-full
-    bg-secondary text-text-inverse
-    shadow-lg hover:shadow-xl
-    transition-all duration-200
-    hover:bg-secondary/80
-    active:scale-[0.97]
-    cursor-pointer
-    font-medium text-base
-    border border-secondary/30
-    min-h-[44px]
-  "
-            >
-              <Plus size={18} />
-              Add Product
-            </button>
-          </Link>
+          <Button
+            variant="primary"
+            size="md"
+            icon={<Plus size={18} />}
+            className="shadow-lg hover:shadow-xl transition-shadow"
+          >
+            Add Product
+          </Button>
         </Link>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 p-4 bg-[rgba(246,246,246,0.4)] dark:bg-[rgba(30,30,30,0.3)] backdrop-blur-sm border border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] rounded-card shadow-soft">
-        <Search
+      {/* Search & Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <SearchBar
           placeholder="Search products..."
           value={search}
-          onSearch={setSearch}
-          className="flex-1 min-w-[180px] max-w-sm shadow-lg hover:shadow-xl rounded-full"
+          onSearch={handleSearch}
+          className="flex-1"
         />
-        <div className="flex items-center gap-3 flex-nowrap ml-auto">
-          <Input
-            label=""
-            as="select"
-            value={filters.itemType}
-            onChange={(e) =>
-              setFilters((f) => ({ ...f, itemType: e.target.value }))
-            }
-            className="w-auto min-w-[130px] flex-shrink-0"
-          >
-            <option value="">All Types</option>
-            <option value="BANGLE">Bangle</option>
-            <option value="APPAREL">Apparel</option>
-            <option value="FABRIC">Fabric</option>
-            <option value="INNERWEAR">Innerwear</option>
-            <option value="ACCESSORY">Accessory</option>
-          </Input>
-          <Input
-            label=""
-            as="select"
-            value={filters.mainCategory}
-            onChange={(e) =>
-              setFilters((f) => ({ ...f, mainCategory: e.target.value }))
-            }
-            className="w-auto min-w-[130px] flex-shrink-0"
-          >
-            <option value="">All Categories</option>
-            <option value="Sarees">Sarees</option>
-            <option value="Apparel">Apparel</option>
-            <option value="Accessories">Accessories</option>
-            <option value="Innerwear">Innerwear</option>
-            <option value="Bangles">Bangles</option>
-          </Input>
-          {(filters.itemType || filters.mainCategory) && (
-            <button
-              onClick={() => setFilters({ itemType: "", mainCategory: "" })}
-              className="text-sm text-text-secondary dark:text-text-secondary/70 hover:text-primary underline transition-colors whitespace-nowrap flex-shrink-0 cursor-pointer"
-            >
-              Clear filters
-            </button>
-          )}
-        </div>
+        <FilterBar
+          filters={filterConfigs.map((f) => ({
+            ...f,
+            value: filters[f.key] || '',
+          }))}
+          onFilterChange={handleFilterChange}
+          onClearAll={handleClearFilters}
+          className="flex-1"
+        />
       </div>
 
+      {/* Table */}
       <ProductTable
         products={products}
         loading={loading}
         onProductUpdated={fetchProducts}
       />
 
+      {/* Pagination */}
       {total > pageSize && (
         <div className="flex justify-end pt-2">
           <Pagination
