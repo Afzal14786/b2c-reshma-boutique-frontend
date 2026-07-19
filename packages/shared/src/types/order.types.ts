@@ -60,7 +60,12 @@ export interface OrderPricing {
 
 export interface Order {
   id: string;
-  user: string;
+  user: {
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+  };
   orderNumber: string;
   items: OrderItem[];
   shippingAddress: OrderShippingAddress;

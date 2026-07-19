@@ -7,6 +7,14 @@ import {
   UpdateOrderStatusRequest,
 } from '../types';
 
+// Add this type for query params if not already defined
+export interface GetAllOrdersParams {
+  page?: number;
+  limit?: number;
+  q?: string;          // search query
+  status?: string;     // order status
+}
+
 export const ordersApi = {
   checkout: (data: CheckoutRequest) =>
     apiClient.post<{ order: Order }>('/orders/checkout', data),
@@ -18,11 +26,14 @@ export const ordersApi = {
     apiClient.get<{ orders: Order[] }>('/orders/my-order'),
 
   getInvoice: (orderId: string) =>
-    apiClient.get<{ url: string }>(`/orders/${orderId}/invoice`), // might return URL or blob
+    apiClient.get<{ url: string }>(`/orders/${orderId}/invoice`),
 
-  // Admin only
-  getAllOrders: () =>
-    apiClient.get<{ orders: Order[] }>('/orders/admin'),
+  getOrderById: (orderId: string) =>
+    apiClient.get<{ order: Order }>(`/orders/${orderId}`), // fixed return type and still in process implementing in backend
+
+  // Admin only – now accepts pagination/filtering params
+  getAllOrders: (params?: GetAllOrdersParams) =>
+    apiClient.get<{ orders: Order[]; total: number }>('/orders/admin', { params }),
 
   updateOrderStatus: (orderId: string, data: UpdateOrderStatusRequest) =>
     apiClient.patch<{ order: Order }>(`/orders/admin/${orderId}/status`, data),
