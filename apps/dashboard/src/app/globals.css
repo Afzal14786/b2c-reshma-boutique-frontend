@@ -1,0 +1,268 @@
+/* Tailwind directives */
+@import "tailwindcss";
+
+:root {
+  /* -----------------------------
+      Modern Apple Inspired Theme
+   ------------------------------*/
+
+  /* Primary */
+  --color-primary: #233044;
+  --color-primary-light: #324863;
+
+  --color-secondary: #5f9df5;
+  --color-secondary-light: #84b8ff;
+
+  --color-accent: #74d8c5;
+  --color-accent-soft: #b9ebe0;
+
+  --color-soft-feminine: #d5cbe6;
+
+  /* Backgrounds (Reduced White) */
+  --color-bg: #eef3f8;
+  --color-surface: rgba(247, 249, 252, 0.72);
+  --color-surface-tint: #edf2f8;
+
+  /* Text */
+  --color-text-primary: #16202f;
+  --color-text-secondary: #66758b;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-border: rgba(120, 145, 180, 0.18);
+  --color-border-focus: #6aa4ff;
+
+  /* Status */
+  --color-success: #67d6b8;
+  --color-warning: #f3aa2c;
+  --color-error: #eb7272;
+
+  /* Radius */
+  --radius-card: 20px;
+  --radius-btn: 14px;
+  --radius-input: 12px;
+
+  /* Shadows */
+  --shadow-soft:
+    0 10px 40px rgba(15, 23, 42, 0.08),
+    0 2px 10px rgba(255, 255, 255, 0.45) inset;
+
+  --shadow-hover:
+    0 18px 50px rgba(91, 155, 213, 0.18);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.42);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --glass-shadow:
+    0 10px 40px rgba(15, 23, 42, 0.10),
+    inset 0 1px 0 rgba(255,255,255,.65);
+
+  --glass-blur: 24px;
+}
+
+/* ---------------------------------- */
+/* Dark Theme */
+/* ---------------------------------- */
+
+.dark {
+
+  --color-primary: #eef4fb;
+  --color-primary-light: #d6dfeb;
+
+  --color-secondary: #84b8ff;
+  --color-secondary-light: #5f9df5;
+
+  --color-accent: #6ed9c5;
+  --color-accent-soft: #55cbb6;
+
+  /* Background */
+  --color-bg: #0d1320;
+  --color-surface: rgba(24, 31, 47, .65);
+  --color-surface-tint: #1f293d;
+
+  /* Text */
+  --color-text-primary: #eef3fb;
+  --color-text-secondary: #9dacbf;
+  --color-text-inverse: #111827;
+
+  /* Borders */
+  --color-border: rgba(255,255,255,.08);
+  --color-border-focus: #84b8ff;
+
+  /* Status */
+  --color-success: #6dd5c4;
+  --color-warning: #f39c12;
+  --color-error: #e57373;
+
+  /* Glass */
+  --glass-bg: rgba(20, 24, 34, .42);
+  --glass-border: rgba(255,255,255,.06);
+
+  --glass-shadow:
+    0 12px 40px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.05);
+
+  --glass-blur: 22px;
+}
+
+/* ---------------------------------- */
+/* Body */
+/* ---------------------------------- */
+
+body {
+
+  background:
+    radial-gradient(circle at top left,
+      rgba(120,170,255,.22),
+      transparent 38%),
+
+    radial-gradient(circle at top right,
+      rgba(109,213,196,.18),
+      transparent 35%),
+
+    radial-gradient(circle at bottom,
+      rgba(255,255,255,.35),
+      transparent 45%),
+
+    linear-gradient(
+      145deg,
+      #edf3f8 0%,
+      #e8eef6 30%,
+      #eef2f8 65%,
+      #dde7f3 100%
+    );
+
+  color: var(--color-text-primary);
+
+  min-height: 100vh;
+
+  font-family: var(--font-inter), sans-serif;
+
+  background-attachment: fixed;
+
+  transition:
+    background .35s ease,
+    color .35s ease;
+}
+
+/* Dark */
+
+.dark body {
+
+  background:
+
+    radial-gradient(circle at top left,
+      rgba(88,115,255,.18),
+      transparent 35%),
+
+    radial-gradient(circle at bottom right,
+      rgba(0,210,255,.08),
+      transparent 40%),
+
+    linear-gradient(
+      145deg,
+      #0b111c,
+      #111827,
+      #172032,
+      #0b111c
+    );
+}
+
+/* ---------------------------------- */
+/* Headings */
+/* ---------------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+
+  font-family: var(--font-playfair), serif;
+
+  color: var(--color-primary);
+
+  letter-spacing: -.02em;
+}
+
+/* ---------------------------------- */
+/* Apple Glass */
+/* ---------------------------------- */
+
+.glass {
+
+  background: var(--glass-bg);
+
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+
+  border: 1px solid var(--glass-border);
+
+  box-shadow: var(--glass-shadow);
+}
+
+/* ---------------------------------- */
+/* Scrollbar */
+/* ---------------------------------- */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120,130,150,.35);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120,130,150,.55);
+}
+
+/* ---------------------------------- */
+/* Smooth Animation */
+/* ---------------------------------- */
+
+* {
+
+  transition:
+    background-color .25s ease,
+    border-color .25s ease,
+    color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+/* ---------------------------------- */
+/* Interactive */
+/* ---------------------------------- */
+
+a,
+button,
+[role="button"],
+[type="button"],
+[type="submit"],
+[type="reset"],
+summary,
+label[for],
+input[type="checkbox"],
+input[type="radio"],
+select,
+details summary,
+input[type="file"]::file-selector-button,
+input[type="range"] {
+  cursor: pointer;
+}
+
+a:disabled,
+button:disabled,
+[role="button"]:disabled {
+  cursor: not-allowed;
+}

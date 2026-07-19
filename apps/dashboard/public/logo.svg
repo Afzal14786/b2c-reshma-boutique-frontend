@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9B2C4C"/>
+      <stop offset="100%" stop-color="#D4647A"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#F9E79F"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Cream circular background -->
+  <circle cx="60" cy="60" r="60" fill="#FDF7F2"/>
+
+  <!-- Outer bangle (deep rose) -->
+  <circle cx="60" cy="60" r="42" fill="none" stroke="url(#roseGrad)" stroke-width="6"/>
+  <!-- Middle bangle (gold) -->
+  <circle cx="60" cy="60" r="33" fill="none" stroke="url(#goldGrad)" stroke-width="5"/>
+  <!-- Inner bangle (soft pink) -->
+  <circle cx="60" cy="60" r="24" fill="none" stroke="#D4647A" stroke-width="4"/>
+
+  <!-- Floral R (lotus-inspired petals forming 'R') -->
+  <!-- Central bud -->
+  <circle cx="60" cy="60" r="6" fill="#9B2C4C"/>
+  <!-- Top petal (silk thread shape) -->
+  <path d="M 60 54 Q 60 30 75 40 Q 70 48 60 54" fill="#D4647A"/>
+  <!-- Right petal (R leg) -->
+  <path d="M 67 60 Q 78 60 78 72 Q 78 80 72 80 Q 68 80 68 72" fill="#9B2C4C"/>
+  <!-- Left petal -->
+  <path d="M 53 60 Q 40 55 38 45 Q 42 38 53 42" fill="#D4647A" opacity="0.8"/>
+
+  <!-- Small gold bindi above -->
+  <circle cx="60" cy="10" r="2" fill="#D4AF37"/>
+
+  <!-- Delicate jhumka drop inside the inner bangle -->
+  <path d="M 56 66 L 64 66 L 60 75 Z" fill="url(#goldGrad)"/>
+  <circle cx="60" cy="77" r="2" fill="#D4AF37"/>
+</svg>
