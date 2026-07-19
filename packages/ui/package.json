@@ -15,6 +15,8 @@
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@repo/shared": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "react": "^18.2.0",
@@ -26,7 +28,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@repo/shared": "workspace:*",
     "date-fns": "^4.4.0",
     "react-hook-form": "^7.81.0",
     "zod": "^4.4.3"
