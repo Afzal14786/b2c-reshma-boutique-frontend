@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import { Avatar, Card, Rating, Button } from '../../';
 import { cn } from '../../utils/cn';

@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { Spinner, Rating, Card } from '../../';
 import { ReviewItem } from './ReviewItem';

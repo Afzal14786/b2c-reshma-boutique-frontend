@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import { Input, Button, Rating } from '../../';
 import { cn } from '../../utils/cn';

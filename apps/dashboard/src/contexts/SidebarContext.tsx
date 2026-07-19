@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useMediaQuery } from '@shared/hooks';
 
 interface SidebarContextType {
@@ -15,7 +15,6 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [isOpen, setIsOpen] = useState(!isMobile);
 
-  // Auto‑close on mobile, auto‑open on desktop
   useEffect(() => {
     if (isMobile) {
       setIsOpen(false);

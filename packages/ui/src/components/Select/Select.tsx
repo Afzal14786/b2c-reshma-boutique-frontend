@@ -1,3 +1,4 @@
+'use client'
 import React, { useId } from 'react';
 import { cn } from '../../utils/cn';
 import type { SelectProps, SelectOption, SelectSize } from './Select.types';

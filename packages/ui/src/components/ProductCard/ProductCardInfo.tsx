@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { Price } from '../Price';
 import { Button } from '../Button';

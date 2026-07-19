@@ -3,18 +3,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  RefreshCw, 
-  Ticket, 
-  Tags, 
-  Warehouse, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  RefreshCw,
+  Ticket,
+  Tags,
+  Warehouse,
   Settings,
-  LogOut
+  LogOut,
 } from 'lucide-react';
+import { Badge, Avatar } from '@repo/ui';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Overview' },
@@ -30,29 +31,26 @@ const navItems = [
 
 export const Sidebar = () => {
   const pathname = usePathname();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { isOpen, close } = useSidebar();
 
   return (
     <>
-      {/* Overlay – subtle blur */}
+      {/* Overlay (mobile) */}
       <div
         className={`
-          fixed inset-0 bg-black/20 backdrop-blur-sm z-40
-          transition-opacity duration-300
+          fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300
           lg:hidden
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
         `}
         onClick={close}
       />
 
-      {/* Sidebar – Apple‑style glass (uses CSS variables from globals.css) */}
+      {/* Sidebar */}
       <aside
         className={`
           fixed top-0 left-0 h-full w-64 z-40
-          glass
-          border-r border-glass-border
-          shadow-glass
+          glass border-r border-glass-border shadow-glass
           transition-transform duration-300 ease-in-out
           flex flex-col
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -60,12 +58,12 @@ export const Sidebar = () => {
         `}
       >
         {/* Brand */}
-        <div className="flex flex-col items-center justify-center p-4 border-b border-glass-border h-20">
-          <span className="font-serif text-2xl italic font-semibold text-secondary hover:text-accent transition-colors duration-200 tracking-wide cursor-default">
+        <div className="flex items-center justify-center p-4 border-b border-glass-border h-20">
+          <span className="font-serif text-2xl italic font-semibold text-secondary hover:text-accent transition-colors tracking-wide cursor-default">
             Reshma
           </span>
-          <span className="text-xs text-text-secondary/60 tracking-[0.2em] uppercase mt-0.5 font-light">
-            Boutique
+          <span className="text-xs text-text-secondary/60 tracking-[0.2em] uppercase mt-0.5 font-light ml-1">
+            Admin
           </span>
         </div>
 
@@ -77,7 +75,7 @@ export const Sidebar = () => {
               <Link
                 key={href}
                 href={href}
-                onClick={close}
+                onClick={() => close()}
                 className={`
                   group flex items-center gap-3 px-3 py-2.5 rounded-btn 
                   transition-all duration-200 ease-out
@@ -85,7 +83,7 @@ export const Sidebar = () => {
                   hover:backdrop-blur-sm hover:shadow-glass 
                   hover:translate-x-1
                   ${isActive
-                    ? 'bg-secondary/20 text-secondary shadow-soft border-l-2 border-secondary'
+                    ? 'bg-white/25 dark:bg-white/15 backdrop-blur-sm text-secondary shadow-soft border-l-2 border-secondary'
                     : 'text-text-secondary hover:text-text-primary'
                   }
                 `}
@@ -104,8 +102,22 @@ export const Sidebar = () => {
           })}
         </nav>
 
-        {/* Footer – Logout */}
-        <div className="p-4 border-t border-glass-border">
+        {/* Footer – user info + logout */}
+        <div className="p-4 border-t border-glass-border space-y-3">
+          <div className="flex items-center gap-2 px-3 py-2">
+            <Avatar
+              src={user?.avatar}
+              name={`${user?.firstname} ${user?.lastname}`}
+              size="sm"
+              className="border-2 border-glass-border"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-text-primary truncate">
+                {user?.firstname} {user?.lastname}
+              </p>
+              <p className="text-xs text-text-secondary/70 truncate">{user?.email}</p>
+            </div>
+          </div>
           <button
             onClick={() => logout()}
             className="

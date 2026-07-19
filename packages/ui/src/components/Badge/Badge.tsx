@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { cn } from '../../utils/cn';
 import type { BadgeProps, BadgeVariant, BadgeSize } from './Badge.types';

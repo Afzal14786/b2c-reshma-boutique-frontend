@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import { cn } from '../../utils/cn';
 import type { AlertProps, AlertVariant } from './Alert.types';

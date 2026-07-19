@@ -1,10 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginForm } from '@repo/ui';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export default function LoginPage() {
   const { login, user, isLoading } = useAuth();
@@ -27,7 +26,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg p-4 sm:p-6">
       <div className="w-full max-w-md">
-        {/* Branding */}
         <div className="text-center mb-8">
           <div className="inline-block p-2 bg-surface rounded-card shadow-soft">
             <Image
@@ -42,8 +40,6 @@ export default function LoginPage() {
           <h1 className="mt-6 text-2xl font-serif text-primary">Welcome Back</h1>
           <p className="text-text-secondary text-sm mt-1">Sign in to manage your boutique</p>
         </div>
-
-        {/* Login Form – fully responsive */}
         <div className="bg-surface rounded-card shadow-soft p-6 sm:p-8 border border-border">
           <LoginForm
             onSubmit={handleSubmit}
@@ -51,8 +47,6 @@ export default function LoginPage() {
             error={error}
           />
         </div>
-
-        {/* Footer */}
         <p className="text-center text-xs text-text-secondary mt-6">
           &copy; {new Date().getFullYear()} Reshma Boutique. All rights reserved.
         </p>

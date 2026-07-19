@@ -2,12 +2,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Bell, ChevronDown, LogOut, Settings, User } from 'lucide-react';
-import { Avatar } from '@repo/ui';
+import { Avatar, Search, Dropdown } from '@repo/ui';
 import { useMediaQuery } from '@shared/hooks';
 import { MobileNav } from './MobileNav';
-import { SearchBar } from '@/components/common/SearchBar';
-import { DarkModeToggle } from '@/components/common/DarkModeToggle';
 import Link from 'next/link';
+import { DarkModeToggle } from '@/components/common/DarkModeToggle';
 
 export const AdminHeader = () => {
   const { user, logout } = useAuth();
@@ -31,29 +30,24 @@ export const AdminHeader = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearch = (query: string) => {
-    console.log('Global search:', query);
-    // TODO: Navigate to search results page or show dropdown
-  };
-
   return (
-    <header className="sticky top-0 z-30 h-16 glass border-b border-[rgba(0,0,0,0.06)] dark:border-b-[rgba(255,255,255,0.06)] flex items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-30 h-16 glass border-b border-glass-border flex items-center justify-between px-4 sm:px-6">
       {/* Left: Mobile nav */}
       {isMobile && <MobileNav />}
 
       {/* Center: Search (desktop only) */}
       {!isMobile && (
-        <SearchBar
+        <Search
           placeholder="Search orders, products, customers..."
           className="max-w-md flex-1 mx-4"
-          onSearch={handleSearch}
-          debounce={400}
+          onSearch={(val) => console.log('Search:', val)}
+          inputSize="md"
+          variant="glass"
         />
       )}
 
       {/* Right: Dark Mode Toggle + Notifications + Profile */}
       <div className="flex items-center gap-3 ml-auto">
-        {/* Dark Mode Toggle */}
         <DarkModeToggle />
 
         {/* Notifications */}
@@ -75,7 +69,7 @@ export const AdminHeader = () => {
           )}
         </div>
 
-        {/* Profile */}
+        {/* Profile Dropdown */}
         <div ref={profileRef} className="relative">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -85,7 +79,7 @@ export const AdminHeader = () => {
               src={user?.avatar}
               name={`${user?.firstname} ${user?.lastname}`}
               size="sm"
-              className="border-2 border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]"
+              className="border-2 border-glass-border"
             />
             <span className="text-sm font-medium text-text-primary hidden sm:block">
               {user?.firstname}
@@ -109,7 +103,7 @@ export const AdminHeader = () => {
                 <Settings size={16} />
                 Settings
               </Link>
-              <hr className="border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] my-1" />
+              <hr className="border-glass-border my-1" />
               <button
                 onClick={logout}
                 className="flex items-center gap-3 px-4 py-2 text-sm text-error hover:bg-error/10 transition-colors w-full text-left"
