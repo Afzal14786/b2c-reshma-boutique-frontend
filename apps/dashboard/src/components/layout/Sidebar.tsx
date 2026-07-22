@@ -58,7 +58,7 @@ export const Sidebar = () => {
         `}
       >
         {/* Brand */}
-        <div className="flex items-center justify-center p-4 border-b border-glass-border h-20">
+        <div className="flex items-center justify-center p-4 border-b border-glass-border h-16">
           <span className="font-serif text-2xl italic font-semibold text-secondary hover:text-accent transition-colors tracking-wide cursor-default">
             Reshma
           </span>
