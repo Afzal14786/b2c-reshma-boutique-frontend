@@ -268,3 +268,7 @@ button:disabled,
 [role="button"]:disabled {
   cursor: not-allowed;
 }
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(100%);
+}
