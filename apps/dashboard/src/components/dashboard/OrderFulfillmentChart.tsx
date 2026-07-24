@@ -71,25 +71,27 @@ export const OrderFulfillmentChart = ({ data }: OrderFulfillmentChartProps) => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={margin}>
             {/* Subtle grid lines */}
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-700/50" vertical={false} />
 
             {/* X‑axis with responsive labels */}
             <XAxis
               dataKey="name"
-              tick={{ fontSize, fill: 'rgba(15,26,44,0.5)', fontWeight: 500 }}
+              tick={{ fontSize,fontWeight: 500 }}
+              className="fill-slate-600 dark:fill-slate-400"
               interval={0}
               angle={angle}
               textAnchor={textAnchor}
-              axisLine={{ stroke: 'rgba(255,255,255,0.2)' }}
-              tickLine={{ stroke: 'rgba(255,255,255,0.2)' }}
+              axisLine={{ stroke: 'currentColor', strokeOpacity: 0.2 }}
+              tickLine={{ stroke: 'currentColor', strokeOpacity: 0.2 }}
               padding={{ left: 5, right: 5 }}
             />
 
             {/* Y‑axis with integer ticks */}
             <YAxis
-              tick={{ fontSize: 10, fill: 'rgba(15,26,44,0.5)' }}
-              axisLine={{ stroke: 'rgba(255,255,255,0.2)' }}
-              tickLine={{ stroke: 'rgba(255,255,255,0.2)' }}
+              tick={{ fontSize: 10}}
+              className="fill-slate-600 dark:fill-slate-400"
+              axisLine={{ stroke: 'currentColor', strokeOpacity: 0.2 }}
+              tickLine={{ stroke: 'currentColor', strokeOpacity: 0.2 }}
               allowDecimals={false}
             />
 
