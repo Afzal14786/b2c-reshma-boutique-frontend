@@ -34,7 +34,7 @@ export const AdminHeader = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 h-16 glass border-b border-glass-border flex items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-30 h-20 glass border-b border-glass-border flex items-center justify-between px-4 sm:px-6">
       {/* Left: Mobile nav */}
       {isMobile && <MobileNav />}
 
