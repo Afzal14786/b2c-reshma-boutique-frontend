@@ -115,19 +115,6 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Error banner */}
-      {error && (
-        <div className="p-4 glass rounded-card text-text-primary text-sm flex items-center justify-between flex-wrap gap-2 shadow-glass">
-          <span>{error}</span>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-1.5 bg-secondary text-text-inverse rounded-btn text-xs hover:bg-secondary/80 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      )}
-
       {/* Date range picker */}
       <DateRangePicker
         startDate={dateRange.startDate}
