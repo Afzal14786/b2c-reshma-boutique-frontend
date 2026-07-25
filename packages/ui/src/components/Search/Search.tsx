@@ -90,11 +90,12 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     const variantClasses = {
       glass: `
         bg-glass backdrop-blur-glass
-        border border-glass-border
+        border border-gray-400 dark:border-glass-border
         shadow-glass
+        hover:border-gray-400 dark:hover:border-glass-border
         hover:shadow-glass-hover
-        focus-within:shadow-glass-hover
         focus-within:border-secondary
+        focus-within:shadow-glass-hover
         focus-within:ring-2 focus-within:ring-secondary/30
       `,
       solid: `

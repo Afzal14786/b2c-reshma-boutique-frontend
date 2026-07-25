@@ -34,10 +34,10 @@ export const FilterBar = ({
   const hasActiveFilters = filters.some((f) => f.value && f.value !== '');
 
   return (
-    <div className={`flex flex-wrap items-center gap-3 p-4 glass rounded-card ${className}`}>
+    <div className={`flex items-center gap-3 px-4 py-2 glass rounded-card ${className}`}>
       <Filter size={18} className="text-text-secondary/60 flex-shrink-0" />
       {filters.map((filter) => (
-        <div key={filter.key} className="flex items-center gap-2">
+        <div key={filter.key} className="flex items-baseline gap-2">
           <label className="text-sm text-text-secondary whitespace-nowrap">
             {filter.label}:
           </label>

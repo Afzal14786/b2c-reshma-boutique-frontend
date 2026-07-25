@@ -137,12 +137,12 @@ export default function OrdersPage() {
         subtitle="Manage and track customer orders"
       />
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row items-center gap-3">
         <SearchBar
           placeholder="Search by order number or customer..."
           value={search}
           onSearch={handleSearch}
-          className="flex-1"
+          className="w-full sm:w-auto sm:ml-auto"
         />
         <FilterBar
           filters={filterConfigs.map((f) => ({
@@ -151,7 +151,7 @@ export default function OrdersPage() {
           }))}
           onFilterChange={handleFilterChange}
           onClearAll={handleClearFilters}
-          className="flex-1"
+          className="w-full sm:w-auto sm:ml-auto"
         />
       </div>
 
