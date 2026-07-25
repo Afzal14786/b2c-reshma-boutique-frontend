@@ -1,8 +1,9 @@
 export enum ReturnStatus {
-  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
-  REFUNDED = 'REFUNDED',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
 }
 
 export enum ReturnReason {
