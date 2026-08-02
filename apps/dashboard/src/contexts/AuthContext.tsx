@@ -1,8 +1,14 @@
-'use client';
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { userApi, authApi, setRefreshTokenFn } from '@repo/shared';
-import type { User } from '@repo/shared';
+"use client";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import { useRouter } from "next/navigation";
+import { userApi, authApi, setRefreshTokenFn } from "@repo/shared";
+import type { User } from "@repo/shared";
 
 interface AuthContextType {
   user: User | null;
@@ -14,7 +20,21 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Admin credentials are provisioned directly in the DB at deploy time —
+// there's no self-registration for this app. Only role === 'ADMIN' may
+// hold a session here, so a correct password on a non-admin account is
+// still rejected.
+const assertAdmin = (user: User) => {
+  if (user.role !== "ADMIN") {
+    throw new Error(
+      "This dashboard is only accessible to administrator accounts.",
+    );
+  }
+};
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -24,18 +44,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await authApi.refresh();
       const newToken = res.data.accessToken;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', newToken);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("accessToken", newToken);
       }
       return newToken;
     } catch {
       // Refresh failed – clear local storage and redirect
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('accessToken');
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("accessToken");
       }
       setUser(null);
-      router.push('/login');
-      return '';
+      router.push("/login");
+      return "";
     }
   }, [router]);
 
@@ -46,8 +66,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loadUser = async () => {
       try {
         const res = await userApi.getProfile();
+        assertAdmin(res.data.user);
         setUser(res.data.user);
       } catch {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("accessToken"); // ← added
+        }
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -60,13 +84,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async (email: string, password: string) => {
       const res = await authApi.login({ email, password });
       const { accessToken, user } = res.data;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', accessToken);
+
+      assertAdmin(user);
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("accessToken", accessToken);
       }
       setUser(user);
-      router.push('/dashboard');
+      router.push("/dashboard");
     },
-    [router]
+    [router],
   );
 
   const logout = useCallback(async () => {
@@ -75,15 +102,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // ignore
     }
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('accessToken');
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken");
     }
     setUser(null);
-    router.push('/login');
+    router.push("/login");
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout, refreshTokens }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, login, logout, refreshTokens }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -91,6 +120,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
