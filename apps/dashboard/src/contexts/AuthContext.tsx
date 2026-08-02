@@ -70,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(res.data.user);
       } catch {
         if (typeof window !== "undefined") {
-          localStorage.removeItem("accessToken"); // ← added
+          localStorage.removeItem("accessToken");
         }
         setUser(null);
       } finally {
