@@ -3,6 +3,55 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * THEME OWNERSHIP — READ BEFORE EDITING
+ * ═══════════════════════════════════════════════════════════════════
+ * This file is the ONE AND ONLY theme source for the dashboard app.
+ * @repo/ui's shared components never import any CSS and never
+ * hardcode a color, radius, or blur value — they only use Tailwind
+ * utility classes (bg-primary, rounded-card, the literal `glass`
+ * class, etc.), which tooling/tailwind/index.mjs resolves to the CSS
+ * custom properties below via var(--name, fallback).
+ *
+ * This means each app (dashboard, and eventually storefront) is free
+ * to give these variables completely different VALUES — different
+ * brand colors, different radii, different blur amounts — as long as
+ * it defines the same variable NAMES. That's how "separate themes,
+ * shared components" works here. Every app rendering @repo/ui
+ * components must define all of the following in its own globals.css:
+ *
+ *   Colors:   --color-primary, --color-primary-light, --color-secondary,
+ *             --color-secondary-light, --color-accent, --color-accent-soft,
+ *             --color-soft-feminine, --color-bg, --color-surface,
+ *             --color-surface-tint, --color-text-primary,
+ *             --color-text-secondary, --color-text-inverse, --color-border,
+ *             --color-border-focus, --color-success, --color-warning,
+ *             --color-error   (each needed for both :root and .dark)
+ *
+ *   Radius:   --radius-card, --radius-btn, --radius-input
+ *             (NOT --radius-sm/md/lg/xl — that's a different, unused
+ *             scale left over from an earlier design; nothing in this
+ *             codebase's Tailwind config maps to it)
+ *
+ *   Shadows:  --shadow-soft, --shadow-hover
+ *
+ *   Glass:    --glass-bg, --glass-border, --glass-shadow, --glass-blur
+ *             (--glass-blur MUST be set for both :root and .dark —
+ *             it's easy to forget the dark-mode one)
+ *
+ *   The literal `.glass` class itself (background/backdrop-filter/
+ *   border/box-shadow built from the variables above) — defined
+ *   further down in this file.
+ *
+ * packages/ui/src/styles/* (tokens.css, utilities.css, themes/*.css)
+ * is NOT currently imported anywhere and uses an incompatible radius
+ * scale — do not treat it as a live source of truth. See conversation
+ * history / team discussion for whether it gets deleted or repurposed
+ * as the storefront's future globals.css starting point.
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
 :root {
   /* -----------------------------
       Modern Apple Inspired Theme
@@ -59,7 +108,7 @@
     0 10px 40px rgba(15, 23, 42, 0.10),
     inset 0 1px 0 rgba(255,255,255,.65);
 
-  --glass-blur: 24px;
+  --glass-blur: 12px;
 }
 
 /* ---------------------------------- */
@@ -104,7 +153,7 @@
     0 12px 40px rgba(0,0,0,.35),
     inset 0 1px 0 rgba(255,255,255,.05);
 
-  --glass-blur: 22px;
+  --glass-blur: 12px;
 }
 
 /* ---------------------------------- */
@@ -139,8 +188,6 @@ body {
   min-height: 100vh;
 
   font-family: var(--font-inter), sans-serif;
-
-  background-attachment: fixed;
 
   transition:
     background .35s ease,
@@ -195,7 +242,7 @@ h5 {
 
   background: var(--glass-bg);
 
-  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
 
   border: 1px solid var(--glass-border);
@@ -225,18 +272,17 @@ h5 {
 }
 
 /* ---------------------------------- */
-/* Smooth Animation */
+/* Border color default                */
 /* ---------------------------------- */
-
-* {
-
-  transition:
-    background-color .25s ease,
-    border-color .25s ease,
-    color .25s ease,
-    box-shadow .25s ease,
-    transform .25s ease;
-}
+/* Removed the blanket `* { transition: ... }` rule that used to sit
+   here — it applied 5 animatable properties to every element in the
+   DOM, so a single dark-mode toggle (which changes ~20 CSS custom
+   properties nearly everything is styled from) forced potentially
+   thousands of elements to animate simultaneously. That's what was
+   causing the multi-second freeze/stutter with visibly broken
+   mid-transition frames. `body`'s own scoped transition above, plus
+   each component's individual transition-colors/transition-[...]
+   classes, already handle smooth theme switching correctly. */
 
 * {
   border-color: var(--color-border);

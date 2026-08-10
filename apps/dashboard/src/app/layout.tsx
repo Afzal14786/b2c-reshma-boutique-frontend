@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import { ThemeProvider, ToastProvider } from '@repo/ui';
+import {AuthProvider} from '@/contexts/AuthContext';
 import './globals.css';
 
 const inter = Inter({
@@ -28,7 +29,7 @@ export default function RootLayout({
       <body className="font-sans text-text-primary antialiased min-h-screen">
         <ThemeProvider>
           <ToastProvider>
-            {children}
+            <AuthProvider>{children}</AuthProvider>
           </ToastProvider>
         </ThemeProvider>
       </body>
