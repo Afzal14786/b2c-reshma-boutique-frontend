@@ -100,7 +100,7 @@ export const OrderTable = ({
       render: (item: Order) => (
         <div className="flex items-center gap-2">
           <StatusBadge status={item.orderStatus} variant="order" />
-          {updating === item.id && (
+          {updating === item._id && (
             <span className="inline-block w-4 h-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
           )}
         </div>
@@ -136,7 +136,7 @@ export const OrderTable = ({
       render: (item: Order) => (
         <div className="flex items-center gap-1.5 flex-wrap">
           {/* View */}
-          <Link href={`/dashboard/orders/${item.id}`}>
+          <Link href={`/dashboard/orders/${item._id}`}>
             <Button variant="glass" size="sm" aria-label="View order">
               <Eye size={16} />
             </Button>
@@ -145,12 +145,12 @@ export const OrderTable = ({
           {/* Status update dropdown (inline) */}
           <Select
             value={item.orderStatus}
-            onChange={(e) => handleStatusChange(item.id, e.target.value as Order['orderStatus'])}
+            onChange={(e) => handleStatusChange(item._id, e.target.value as Order['orderStatus'])}
             options={statusOptions}
             variant="glass"
             size="sm"
             className="min-w-[120px]"
-            disabled={updating === item.id}
+            disabled={updating === item._id}
           />
 
           {/* Dispatch */}
@@ -158,7 +158,7 @@ export const OrderTable = ({
             <Button
               variant="glass"
               size="sm"
-              onClick={() => onDispatch(item.id)}
+              onClick={() => onDispatch(item._id)}
               aria-label="Dispatch"
             >
               <Truck size={16} />
@@ -169,7 +169,7 @@ export const OrderTable = ({
           <Button
             variant="glass"
             size="sm"
-            onClick={() => onInvoice(item.id)}
+            onClick={() => onInvoice(item._id)}
             aria-label="Download invoice"
           >
             <FileText size={16} />

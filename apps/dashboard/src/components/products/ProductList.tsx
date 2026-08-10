@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { productsApi, type Product } from '@repo/shared';
 import { Button, Pagination } from '@repo/ui';
 import { ProductTable } from './ProductTable';
 import { SearchBar, FilterBar } from '@/components/common';
 import { Plus } from 'lucide-react';
+import { useToast } from "@repo/ui";
 
 // ─── Filter configuration ───────────────────────────────────────
 
@@ -43,6 +44,7 @@ export const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({
@@ -50,10 +52,10 @@ export const ProductList = () => {
     mainCategory: '',
   });
   const pageSize = 10;
-
+  const { addToast } = useToast();
   // ─── Fetch products ──────────────────────────────────────────
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const res = await productsApi.getProducts({
@@ -64,37 +66,41 @@ export const ProductList = () => {
         mainCategory: filters.mainCategory || undefined,
       });
       setProducts(res.data.products);
-      setTotal(res.data.total);
+      setTotal(res.data.meta.total);
+      setTotalPages(res.data.meta.totalPages);
     } catch (error) {
       console.error('Failed to fetch products:', error);
+      addToast({ message: 'Failed to load products. Please try again.', variant: 'error' });
       setProducts([]);
       setTotal(0);
+      setTotalPages(0);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, filters, addToast]);
 
   useEffect(() => {
     fetchProducts();
-  }, [page, search, filters]);
+  }, [fetchProducts]);
 
   // ─── Handlers ─────────────────────────────────────────────────
 
-  const handleFilterChange = (key: string, value: string) => {
+  // filter's are not working means they are not working as exected 
+  const handleFilterChange = useCallback((key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setPage(1); // Reset to first page when filters change
-  };
+  }, []);
 
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setFilters({ itemType: '', mainCategory: '' });
     setPage(1);
     setSearch('');
-  };
+  }, []);
 
-  const handleSearch = (value: string) => {
+  const handleSearch = useCallback((value: string) => {
     setSearch(value);
     setPage(1);
-  };
+  }, []);
 
   // ─── Render ──────────────────────────────────────────────────
 
@@ -153,7 +159,7 @@ export const ProductList = () => {
         <div className="flex justify-end pt-2">
           <Pagination
             currentPage={page}
-            totalPages={Math.ceil(total / pageSize)}
+            totalPages={totalPages}
             onPageChange={setPage}
           />
         </div>

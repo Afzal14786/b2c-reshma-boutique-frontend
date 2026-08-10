@@ -8,6 +8,7 @@ import { productsApi, type Product, TaxProfile } from '@repo/shared';
 import { buildProductSchema } from './ProductFormSchemas';
 import { ProductTypeFields } from './ProductTypeFields';
 import { productTypeConfig } from './productTypeConfig';
+import { Form } from '@repo/ui';  /// this is not implemented here, we already have beautiful form inside reusable package
 
 interface ProductFormProps {
   initialData?: Product;
@@ -168,7 +169,7 @@ export const ProductForm = ({ initialData, onSuccess, onCancel }: ProductFormPro
       });
 
       if (initialData) {
-        await productsApi.updateProduct(initialData.id, formData);
+        await productsApi.updateProduct(initialData._id, formData);
       } else {
         await productsApi.createProduct(formData);
       }
