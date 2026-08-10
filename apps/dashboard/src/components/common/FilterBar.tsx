@@ -45,7 +45,7 @@ export const FilterBar = ({
             value={filter.value || ''}
             onChange={(e) => onFilterChange(filter.key, e.target.value)}
             options={filter.options}
-            placeholder={filter.placeholder || 'All'}
+            placeholder={filter.placeholder}
             variant="glass"
             size="sm"
             className="min-w-[120px]"
