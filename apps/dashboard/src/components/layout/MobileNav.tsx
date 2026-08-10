@@ -8,7 +8,7 @@ export const MobileNav = () => {
   return (
     <button
       onClick={toggle}
-      className="p-2 rounded-full glass hover:shadow-lg transition-all duration-200 lg:hidden"
+      className="p-2 rounded-full glass hover:shadow-lg transition-shadow duration-200"
       aria-label="Toggle menu"
     >
       {isOpen ? <X size={24} className="text-text-primary" /> : <Menu size={24} className="text-text-primary" />}

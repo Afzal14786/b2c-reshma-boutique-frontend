@@ -15,7 +15,6 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
-import { Badge, Avatar } from '@repo/ui';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Overview' },
@@ -31,7 +30,7 @@ const navItems = [
 
 export const Sidebar = () => {
   const pathname = usePathname();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const { isOpen, close } = useSidebar();
 
   return (
@@ -39,8 +38,8 @@ export const Sidebar = () => {
       {/* Overlay (mobile) */}
       <div
         className={`
-          fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300
-          lg:hidden
+          fixed inset-0 bg-black/20 z-40 transition-opacity duration-300
+          md:hidden
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
         `}
         onClick={close}
@@ -54,7 +53,7 @@ export const Sidebar = () => {
           transition-transform duration-300 ease-in-out
           flex flex-col
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0
+          md:translate-x-0
         `}
       >
         {/* Brand */}
@@ -81,12 +80,12 @@ export const Sidebar = () => {
                 onClick={() => close()}
                 className={`
                   group flex items-center gap-3 px-3 py-2.5 rounded-btn 
-                  transition-all duration-200 ease-out
+                  transition-[background-color,box-shadow,transform] duration-200 ease-out
                   hover:bg-white/20 dark:hover:bg-white/10 
-                  hover:backdrop-blur-sm hover:shadow-glass 
+                  hover:shadow-glass 
                   hover:translate-x-1
                   ${isActive
-                    ? 'bg-white/25 dark:bg-white/15 backdrop-blur-sm text-secondary shadow-soft border-l-2 border-secondary'
+                    ? 'bg-white/25 dark:bg-white/15 text-secondary shadow-soft border-l-2 border-secondary'
                     : 'text-text-secondary hover:text-text-primary'
                   }
                 `}
@@ -111,7 +110,7 @@ export const Sidebar = () => {
             onClick={() => logout()}
             className="
               group flex items-center gap-3 px-3 py-2.5 w-full rounded-btn 
-              transition-all duration-200 ease-out
+              transition-[background-color,box-shadow,transform] duration-200 ease-out
               text-text-secondary hover:bg-error/10 hover:text-error hover:translate-x-1
             "
           >
