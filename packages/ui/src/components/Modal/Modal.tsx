@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../utils/cn';
 import { useScrollLock } from '../../hooks/useScrollLock';
@@ -22,6 +22,28 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+
+   // Keep the modal mounted for the duration of the exit transition instead
+  // of vanishing instantly the moment isOpen flips to false — this is what
+  // modalTransition.exit/exitActive are actually for.
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      setIsClosing(false);
+    } else if (shouldRender) {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+        setIsClosing(false);
+      }, 200); // matches modalTransition.exit's duration
+      return () => clearTimeout(timer);
+    }
+    // shouldRender intentionally excluded — this effect should only react to isOpen changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   useScrollLock(isOpen);
 
@@ -58,12 +80,18 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   // ─── Container classes ────────────────────────────────────────────
+  // flex flex-col so the header/footer stay put and only the body
+  // (flex-1 + overflow-y-auto below) scrolls when content is taller
+  // than the viewport allows.
 
   const containerClasses = cn(
-    'w-full rounded-2xl overflow-hidden transition-all duration-300',
+    'w-full rounded-2xl overflow-hidden flex flex-col',
     'shadow-2xl',
     glass ? 'glass' : 'bg-surface border border-border shadow-soft',
     modalSizeVariants[size],
+    isClosing
+      ? cn(modalTransition.exit, modalTransition.exitActive)
+      : cn(modalTransition.enter, modalTransition.enterActive),
     className,
   );
 
@@ -140,7 +168,10 @@ export const Modal: React.FC<ModalProps> = ({
         tabIndex={-1}
       >
         {renderHeader()}
-        <div className="p-4 sm:p-5">{children}</div>
+        {/* min-h-0 is required alongside flex-1 for overflow-y-auto to
+            actually work inside a flex column — without it this div
+            refuses to shrink below its content's natural height. */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5">{children}</div>
         {renderFooter()}
       </div>
     </div>,
