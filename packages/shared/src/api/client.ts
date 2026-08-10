@@ -72,13 +72,14 @@ export const createApiClient = (): AxiosInstance => {
       // The /auth/refresh call itself goes through this same client. If the
       // refresh token cookie is missing/invalid, THIS request also 401s —
       // without this check, that 401 re-enters this branch and calls
-      // refreshTokenFn() again, which calls /auth/refresh again, forever.
-      const isRefreshCall = originalRequest?.url?.includes("/auth/refresh");
+      // refreshTokenFn() again, which calls /auth/ again, forever.
+      // after making changes here the user is unable to enter details in the login page ...
+      const isAuthEndpoint = originalRequest?.url?.includes('/auth/');
 
       if (
         error.response?.status === 401 &&
         !originalRequest._retry &&
-        !isRefreshCall
+        !isAuthEndpoint
       ) {
         originalRequest._retry = true;
         try {

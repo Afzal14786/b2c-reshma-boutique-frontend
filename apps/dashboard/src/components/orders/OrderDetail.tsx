@@ -58,7 +58,7 @@ export const OrderDetail = ({
   const handleStatusChange = async (newStatus: Order['orderStatus']) => {
     setUpdating(true);
     try {
-      await onStatusUpdate(order.id, newStatus);
+      await onStatusUpdate(order._id, newStatus);
     } finally {
       setUpdating(false);
     }

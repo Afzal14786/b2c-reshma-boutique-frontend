@@ -20,7 +20,7 @@ export interface RatingsMetadata {
 
 // Base product – shared fields
 export interface BaseProduct {
-  id: string;
+  _id: string;
   itemType: ItemType;
   sku: string;
   name: string;

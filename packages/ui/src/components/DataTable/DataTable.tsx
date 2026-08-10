@@ -74,6 +74,7 @@ export function DataTable<T extends Record<string, any>>({
   className = '',
   emptyMessage = 'No data available',
   rowClassName,
+  getRowKey,
 }: DataTableProps<T>) {
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -145,13 +146,12 @@ export function DataTable<T extends Record<string, any>>({
     <Card variant="solid" className={`overflow-hidden ${className}`}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
-          <thead className="bg-surface-tint/20 border-b border-border">
+          <thead className="bg-surface-tint/20 border-b border-border" style={{ contain: 'paint' }}>
             <tr>
               {columns.map((col) => {
                 const isSortable = col.sortable !== false;
                 const isSorted = sortField === col.key;
                 const align = col.align || 'left';
-                const width = col.width ? `min-w-[${col.width}px]` : '';
 
                 return (
                   <th
@@ -162,7 +162,6 @@ export function DataTable<T extends Record<string, any>>({
                       isSortable && 'cursor-pointer hover:text-text-primary',
                       align === 'center' && 'text-center',
                       align === 'right' && 'text-right',
-                      width,
                     )}
                     onClick={() => isSortable && handleSort(col.key as string)}
                     style={col.width ? { minWidth: col.width } : undefined}
@@ -190,7 +189,12 @@ export function DataTable<T extends Record<string, any>>({
               );
 
               return (
-                <tr key={index} className={rowClass} onClick={() => onRowClick?.(item)}>
+                <tr
+                  key={getRowKey ? getRowKey(item) : index}
+                  className={rowClass}
+                  onClick={() => onRowClick?.(item)}
+                  style={{ contain: 'paint' }}
+                >
                   {columns.map((col) => {
                     const align = col.align || 'left';
                     const className = cn(

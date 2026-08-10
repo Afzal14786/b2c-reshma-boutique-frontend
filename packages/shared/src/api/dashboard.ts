@@ -3,5 +3,5 @@ import { DashboardMetrics, DateRangeQuery } from '../types';
 
 export const dashboardApi = {
   getMetrics: (params?: DateRangeQuery) =>
-    apiClient.get<DashboardMetrics>('/dashboard/metrics', { params }),
+    apiClient.get<DashboardMetrics>('/dashboards/metrics', { params }),
 };

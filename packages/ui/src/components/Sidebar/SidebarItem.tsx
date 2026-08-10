@@ -29,9 +29,9 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
 
   if (href) {
     return (
-      <a href={href} className={classes} onClick={() => onClick?.(item)}>
+      <Link href={href} className={classes} onClick={() => onClick?.(item)}>
         {content}
-      </a>
+      </Link>
     );
   }
 

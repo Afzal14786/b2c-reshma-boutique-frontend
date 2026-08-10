@@ -11,23 +11,23 @@ export const productsApi = {
     sort?: string;
     q?: string;
   }) =>
-    apiClient.get<{ products: Product[]; total: number; page: number; limit: number }>(
-      '/products',
-      { params },
-    ),
+    apiClient.get<{
+      products: Product[];
+      meta: { total: number; page: number; limit: number; totalPages: number };
+    }>('/products', { params }),
 
-  getProductById: (id: string) => apiClient.get<Product>(`/products/${id}`),
-  // admin 
+  getProductById: (id: string) => apiClient.get<{ product: Product }>(`/products/${id}`),
+
+  // admin
   createProduct: (data: FormData) =>
-    apiClient.post<Product>('/products', data, {
+    apiClient.post<{ product: Product }>('/products', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
 
   updateProduct: (id: string, data: FormData) =>
-    apiClient.patch<Product>(`/products/${id}`, data, {
+    apiClient.patch<{ product: Product }>(`/products/${id}`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
 
-  deleteProduct: (id: string) =>
-    apiClient.delete<{ message: string }>(`/products/${id}`),
+  deleteProduct: (id: string) => apiClient.delete<null>(`/products/${id}`),
 };

@@ -20,4 +20,5 @@ export interface DataTableProps<T> {
   className?: string;
   emptyMessage?: string;
   rowClassName?: (item: T) => string;
+  getRowKey?: (item: T) => string | number;
 }

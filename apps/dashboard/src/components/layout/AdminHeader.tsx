@@ -40,13 +40,15 @@ export const AdminHeader = () => {
 
       {/* Center: Search (desktop only) */}
       {!isMobile && (
-        <Search
-          placeholder="Search orders, products, customers..."
-          className="max-w-md flex-1 mx-4"
-          onSearch={(val) => console.log('Search:', val)}
-          inputSize="md"
-          variant="glass"
-        />
+        <div className="flex-1 flex justify-center px-4">
+          <Search
+            placeholder="Search orders, products, customers..."
+            className="max-w-md w-full"
+            onSearch={(val) => console.log('Search:', val)}
+            inputSize="md"
+            variant="glass"
+          />
+        </div>
       )}
 
       {/* Right: Dark Mode Toggle + Notifications + Profile */}

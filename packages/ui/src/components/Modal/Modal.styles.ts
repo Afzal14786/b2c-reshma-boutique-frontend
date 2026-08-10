@@ -1,10 +1,10 @@
 import { cva } from 'class-variance-authority';
 
 export const modalSizeVariants = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
+  sm: 'max-w-sm max-h-[90vh]',
+  md: 'max-w-md max-h-[90vh]',
+  lg: 'max-w-2xl max-h-[90vh]',
+  xl: 'max-w-4xl max-h-[90vh]',
   full: 'max-w-[95vw] max-h-[95vh]',
 };
 

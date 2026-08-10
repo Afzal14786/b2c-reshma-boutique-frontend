@@ -18,7 +18,7 @@ export default function EditProductPage() {
     const fetchProduct = async () => {
       try {
         const res = await productsApi.getProductById(id);
-        setProduct(res.data);
+        setProduct(res.data.product);
       } catch (error) {
         console.error('Failed to fetch product:', error);
         router.push('/dashboard/products');

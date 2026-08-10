@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
 } from "react";
 import { useRouter } from "next/navigation";
 import { userApi, authApi, setRefreshTokenFn } from "@repo/shared";
@@ -64,6 +65,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setRefreshTokenFn(refreshTokens);
 
     const loadUser = async () => {
+      // No token at all means there's nothing to verify — don't call
+      // getProfile() just to get a guaranteed 401, which then triggers a
+      // guaranteed-to-fail /auth/refresh call. That refresh call counts
+      // against the same shared authLimiter bucket as real login attempts
+      // (10 requests/hour for ALL of /auth/*), so doing this on every
+      // mount for a logged-out visitor can exhaust the limit before
+      // anyone even gets to log in.
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
+      if (!token) {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const res = await userApi.getProfile();
         assertAdmin(res.data.user);
@@ -109,9 +127,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     router.push("/login");
   }, [router]);
 
+  const value = useMemo(
+    () => ({ user, isLoading, login, logout, refreshTokens }),
+    [user, isLoading, login, logout, refreshTokens],
+  );
+
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, login, logout, refreshTokens }}
+      value={value}
     >
       {children}
     </AuthContext.Provider>

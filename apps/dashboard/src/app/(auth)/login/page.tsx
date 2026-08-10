@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginForm } from '@repo/ui';
+import { useToast } from "@repo/ui";
 import Image from 'next/image';
 
 export default function LoginPage() {
   const { login, user, isLoading } = useAuth();
   const router = useRouter();
   const [error, setError] = useState<string | undefined>();
+  const { addToast } = useToast();
 
   useEffect(() => {
     if (user) router.push('/dashboard');
@@ -19,7 +21,13 @@ export default function LoginPage() {
     try {
       await login(data.email, data.password);
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Invalid credentials. Please try again.');
+      addToast({
+        title: 'Error',
+        message: 'Invalid credentials. Please try again.',
+        variant: 'error',
+        duration: 5000,
+      });
+      setError(err?.response?.data?.message || err?.message || 'Invalid credentials. Please try again.');
     }
   };
 

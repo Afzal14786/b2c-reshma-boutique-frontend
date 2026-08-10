@@ -5,7 +5,7 @@ export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 // =================== Address ===================
 
 export interface Address {
-  id: string;                 // MongoDB ObjectId
+  _id: string;                 // MongoDB ObjectId
   street: string;
   city: string;
   state: string;
@@ -25,7 +25,7 @@ export interface UserPreferences {
 // =================== User ===================
 
 export interface User {
-  id: string;                        // MongoDB ObjectId
+  _id: string;                        // MongoDB ObjectId
   authProvider: AuthProvider;
   googleId?: string;                 // Only for Google OAuth users
   email: string;

@@ -1,26 +1,11 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '@repo/ui';
 
 export const DarkModeToggle: React.FC = () => {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    // Check local storage or system preference
-    const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = stored === 'dark' || (!stored && prefersDark);
-
-    setIsDark(shouldBeDark);
-    document.documentElement.classList.toggle('dark', shouldBeDark);
-  }, []);
-
-  const toggle = () => {
-    const newDark = !isDark;
-    setIsDark(newDark);
-    document.documentElement.classList.toggle('dark', newDark);
-    localStorage.setItem('theme', newDark ? 'dark' : 'light');
-  };
+  const { theme, toggle } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
     <button
