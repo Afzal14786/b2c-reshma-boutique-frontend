@@ -1,6 +1,7 @@
-'use client';
-import { createContext, useContext, useState, useEffect } from 'react';
-import { useMediaQuery } from '@shared/hooks';
+"use client";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useMediaQuery } from "@shared/hooks";
+import { useCallback, useMemo } from "react";
 
 interface SidebarContextType {
   isOpen: boolean;
@@ -11,8 +12,10 @@ interface SidebarContextType {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const isMobile = useMediaQuery('(max-width: 768px)');
+export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [isOpen, setIsOpen] = useState(!isMobile);
 
   useEffect(() => {
@@ -23,12 +26,17 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [isMobile]);
 
-  const toggle = () => setIsOpen((prev) => !prev);
-  const close = () => setIsOpen(false);
-  const open = () => setIsOpen(true);
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+  const close = useCallback(() => setIsOpen(false), []);
+  const open = useCallback(() => setIsOpen(true), []);
+
+  const value = useMemo(
+    () => ({ isOpen, toggle, close, open }),
+    [isOpen, toggle, close, open],
+  );
 
   return (
-    <SidebarContext.Provider value={{ isOpen, toggle, close, open }}>
+    <SidebarContext.Provider value={value}>
       {children}
     </SidebarContext.Provider>
   );
@@ -36,6 +44,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
-  if (!context) throw new Error('useSidebar must be used within SidebarProvider');
+  if (!context)
+    throw new Error("useSidebar must be used within SidebarProvider");
   return context;
 };
