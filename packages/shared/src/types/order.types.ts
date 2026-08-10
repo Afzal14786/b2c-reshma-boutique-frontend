@@ -59,9 +59,9 @@ export interface OrderPricing {
 }
 
 export interface Order {
-  id: string;
+  _id: string;
   user: {
-    id: string;
+    _id: string;
     firstname: string;
     lastname: string;
     email: string;
