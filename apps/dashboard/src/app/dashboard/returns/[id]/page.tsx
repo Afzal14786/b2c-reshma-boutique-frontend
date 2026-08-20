@@ -20,7 +20,7 @@ export default function ReturnDetailsPage() {
     setLoading(true);
     try {
       const res = await returnsApi.getAllReturns({ limit: 100 });
-      const found = res.data.returns.find((r) => r.id === id);
+      const found = res.data.returns.find((r) => r._id === id);
       
       if (found) {
         setReturnReq(found);
