@@ -14,6 +14,7 @@ import type { User } from "@repo/shared";
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
+  isLoggingIn: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshTokens: () => Promise<string>;
@@ -38,6 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const router = useRouter();
 
   // Refresh token function – shared with apiClient via setRefreshTokenFn
@@ -84,8 +86,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       try {
         const res = await userApi.getProfile();
-        assertAdmin(res.data.user);
-        setUser(res.data.user);
+        const userData = res.data;
+        assertAdmin(userData);
+        setUser(userData);
       } catch {
         if (typeof window !== "undefined") {
           localStorage.removeItem("accessToken");
@@ -100,16 +103,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const res = await authApi.login({ email, password });
-      const { accessToken, user } = res.data;
+      setIsLoggingIn(true);
+      try {
+        const res = await authApi.login({ email, password });
+        const { accessToken, user } = res.data;
 
-      assertAdmin(user);
+        assertAdmin(user);
 
-      if (typeof window !== "undefined") {
-        localStorage.setItem("accessToken", accessToken);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("accessToken", accessToken);
+        }
+        setUser(user);
+        router.push("/dashboard");
+      }finally {
+        setIsLoggingIn(false);
       }
-      setUser(user);
-      router.push("/dashboard");
     },
     [router],
   );
@@ -128,8 +136,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [router]);
 
   const value = useMemo(
-    () => ({ user, isLoading, login, logout, refreshTokens }),
-    [user, isLoading, login, logout, refreshTokens],
+    () => ({ user, isLoading, isLoggingIn, login, logout, refreshTokens }),
+    [user, isLoading, isLoggingIn, login, logout, refreshTokens],
   );
 
   return (

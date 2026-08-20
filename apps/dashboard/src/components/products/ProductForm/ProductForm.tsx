@@ -8,7 +8,7 @@ import { productsApi, type Product, TaxProfile } from '@repo/shared';
 import { buildProductSchema } from './ProductFormSchemas';
 import { ProductTypeFields } from './ProductTypeFields';
 import { productTypeConfig } from './productTypeConfig';
-import { Form } from '@repo/ui';  /// this is not implemented here, we already have beautiful form inside reusable package
+import { useToast } from "@repo/ui";
 
 interface ProductFormProps {
   initialData?: Product;
@@ -93,7 +93,7 @@ export const ProductForm = ({ initialData, onSuccess, onCancel }: ProductFormPro
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [itemType, setItemType] = useState(initialData?.itemType || 'BANGLE');
-
+  const { addToast } = useToast();
   const schema = buildProductSchema(itemType);
   const defaultValues = initialData
     ? productToFormValues(initialData)
@@ -175,8 +175,8 @@ export const ProductForm = ({ initialData, onSuccess, onCancel }: ProductFormPro
       }
       onSuccess();
     } catch (error) {
+      addToast({ message: 'Failed to save product. Please check the form.', variant: 'error' });
       console.error(error);
-      alert('Failed to save product.');
     } finally {
       setLoading(false);
     }
