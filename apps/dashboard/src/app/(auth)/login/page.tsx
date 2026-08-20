@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginForm } from '@repo/ui';
-import { useToast } from "@repo/ui";
+import { useToast } from '@repo/ui';
 import Image from 'next/image';
 
 export default function LoginPage() {
-  const { login, user, isLoading } = useAuth();
+  const { login, user, isLoggingIn} = useAuth();
   const router = useRouter();
   const [error, setError] = useState<string | undefined>();
   const { addToast } = useToast();
@@ -29,6 +29,16 @@ export default function LoginPage() {
       });
       setError(err?.response?.data?.message || err?.message || 'Invalid credentials. Please try again.');
     }
+  };
+
+  const handleForgotPassword = () => {
+    addToast({
+      title: 'Forgot Password',
+      message: 'Password reset functionality coming soon.',
+      variant: 'info',
+      duration: 5000,
+    });
+    // router.push('/forgot-password');  // yet to implement darling ... 
   };
 
   return (
@@ -54,11 +64,12 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Login Form – glassy container */}
+
         <LoginForm
           onSubmit={handleSubmit}
-          loading={isLoading}
+          loading={isLoggingIn}
           error={error}
+          onForgotPassword={handleForgotPassword}
           glass
           variant="glass"
         />

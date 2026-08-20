@@ -21,7 +21,7 @@ export interface ReturnItem {
 }
 
 export interface Return {
-  id: string;
+  _id: string;
   user: string;
   order: string;
   items: ReturnItem[];

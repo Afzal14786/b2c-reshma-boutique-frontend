@@ -58,7 +58,7 @@ export default function OrderDetailPage() {
   const handleInvoice = async () => {
     if (!order) return;
     try {
-      const res = await ordersApi.getInvoice(order.id);
+      const res = await ordersApi.getInvoice(order._id);
       if (res.data.url) {
         window.open(res.data.url, '_blank');
       } else {
@@ -106,7 +106,7 @@ export default function OrderDetailPage() {
       <DispatchForm
         isOpen={isDispatchModalOpen}
         onClose={() => setIsDispatchModalOpen(false)}
-        orderId={order.id}
+        orderId={order._id}
         onSuccess={() => {
           setIsDispatchModalOpen(false);
           fetchOrder();
