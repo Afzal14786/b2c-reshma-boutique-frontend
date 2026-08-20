@@ -11,7 +11,7 @@ import {
 export const userApi = {
   // Profile
   getProfile: () =>
-    apiClient.get<{ user: User }>('/users/profile'),
+    apiClient.get<User>('/users/profile'),
 
   updateProfile: (data: UpdateProfileRequest) =>
     apiClient.patch<{ user: User }>('/users/profile', data),
@@ -19,7 +19,7 @@ export const userApi = {
   uploadAvatar: (file: File) => {
     const formData = new FormData();
     formData.append('avatar', file);
-    return apiClient.post<{ user: User }>('/users/profile/avatar', formData, {
+    return apiClient.post<{user: User}>('/users/profile/avatar', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
