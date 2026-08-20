@@ -3,21 +3,36 @@ import React, { useState } from 'react';
 import { Button } from '../Button';
 import { Input } from '../Input';
 
+// Inline SVG icons for eye / eye-off
+const EyeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const EyeOffIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+    <line x1="1" y1="1" x2="23" y2="23" />
+  </svg>
+);
+
 export interface LoginFormProps {
   onSubmit?: (data: { email: string; password: string }) => void;
   onGoogleLogin?: () => void;
+  onForgotPassword?: () => void;
   loading?: boolean;
   error?: string;
   className?: string;
-  /** Apply glass background to the form itself (for standalone use) */
   glass?: boolean;
-  /** Variant for the input fields */
   variant?: 'default' | 'glass';
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
   onSubmit,
   onGoogleLogin,
+  onForgotPassword,
   loading = false,
   error,
   className = '',
@@ -26,6 +41,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +63,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </div>
       )}
 
+      {/* Email field – using the shared Input component with glass variant */}
       <Input
         type="email"
         label="Email"
@@ -55,17 +72,58 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         required
         disabled={loading}
         variant={variant}
+        autoComplete="email"
+        placeholder="Enter your email"
       />
 
-      <Input
-        type="password"
-        label="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        disabled={loading}
-        variant={variant}
-      />
+      {/* Password field – custom wrapper to attach eye toggle */}
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary/80">
+          Password
+        </label>
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            disabled={loading}
+            autoComplete="current-password"
+            className={`
+              w-full px-4 py-2.5 rounded-full
+              glass
+              text-text-primary dark:text-text-primary/90
+              placeholder:text-text-secondary/40
+              focus:border-secondary focus:shadow-[0_0_0_3px_rgba(91,155,213,0.2)]
+              outline-none transition-all duration-200
+              disabled:opacity-50 disabled:cursor-not-allowed
+            `}
+            placeholder="Enter your password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary/60 hover:text-text-secondary transition-colors"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+          </button>
+        </div>
+      </div>
+
+      {/* Forgot password link */}
+      {onForgotPassword && (
+        <div className="flex justify-end -mt-2">
+          <button
+            type="button"
+            onClick={onForgotPassword}
+            className="text-sm text-secondary/70 hover:text-secondary transition-colors font-medium"
+          >
+            Forgot password?
+          </button>
+        </div>
+      )}
 
       <Button type="submit" fullWidth disabled={loading} loading={loading}>
         Sign In
